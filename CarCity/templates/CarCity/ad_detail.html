@@ -1,0 +1,15 @@
+{% extends 'CarCity/base.html' %}
+
+{% block content %}
+  <div class="card">
+    <div class="card-header">
+      <h2>Ad Details</h2>
+    </div>
+    <div class="card-body">
+      <h4 class="card-title">{{ ad.year }} {{ ad.brand }} {{ ad.model }}</h4>
+      <p class="card-text">Price: ${{ ad.price }}</p>
+      <p class="card-text">Contact Information: {% if user.is_authenticated %}{{ ad.contact_info }}{% else %}<a href="{% url 'accounts:login' %}">Log in to see contact information</a>{% endif %}</p>
+      <a href="{% url 'CarCity:ad_list' %}" class="btn btn-secondary">Back to Ads</a>
+    </div>
+  </div>
+{% endblock %}

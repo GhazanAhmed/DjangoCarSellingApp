@@ -1,0 +1,28 @@
+{% extends 'CarCity/base.html' %}
+
+{% block content %}
+  <h2>Sort Car Ads</h2>
+  <p>Click on the sorting options below:</p>
+  <ul>
+    <li><a href="?sort_by=year_asc">Sort by Year (Ascending)</a></li>
+    <li><a href="?sort_by=year_desc">Sort by Year (Descending)</a></li>
+    <li><a href="?sort_by=price_asc">Sort by Price (Ascending)</a></li>
+    <li><a href="?sort_by=price_desc">Sort by Price (Descending)</a></li>
+    <li><a href="?sort_by=date_asc">Sort by Date (Oldest First)</a></li>
+    <li><a href="?sort_by=date_desc">Sort by Date (Newest First)</a></li>
+  </ul>
+  <h3>Sorted Ads:</h3>
+  <ul>
+    {% for ad in ads %}
+      <li>
+        <strong>{{ ad.year }} {{ ad.brand }} {{ ad.model }}</strong>
+        {% if user.is_authenticated %}
+          - Price: ${{ ad.price }}
+          <a href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
+        {% else %}
+          <a href="{% url 'accounts:login' %}">Log in to see details</a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

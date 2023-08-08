@@ -1,0 +1,14 @@
+{% extends 'accounts/base_accounts.html' %}
+
+{% block content %}
+  <h1>Account Login</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.username.label_tag }} {{ form.username }} <br><br>
+    {{ form.password.label_tag }} {{ form.password }} <br><br>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>  
+
+  <p>Do not have an Account?</p>
+  <a class="btn btn-primary" href="{% url 'accounts:register' %}">Register Here</a>
+{% endblock %}
