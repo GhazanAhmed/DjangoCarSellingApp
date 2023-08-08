@@ -2,27 +2,28 @@
 
 {% block content %}
   <h2>Sort Car Ads</h2>
-  <p>Click on the sorting options below:</p>
-  <ul>
-    <li><a href="?sort_by=year_asc">Sort by Year (Ascending)</a></li>
-    <li><a href="?sort_by=year_desc">Sort by Year (Descending)</a></li>
-    <li><a href="?sort_by=price_asc">Sort by Price (Ascending)</a></li>
-    <li><a href="?sort_by=price_desc">Sort by Price (Descending)</a></li>
-    <li><a href="?sort_by=date_asc">Sort by Date (Oldest First)</a></li>
-    <li><a href="?sort_by=date_desc">Sort by Date (Newest First)</a></li>
-  </ul>
-  <h3>Sorted Ads:</h3>
+  <h3>Sort Options:</h3>
+  <form method="get">
+    <select name="sort_by">
+      <option value="year_asc">Sort by Year (Ascending)</option>
+      <option value="year_desc">Sort by Year (Descending)</option>
+      <option value="price_asc">Sort by Price (Ascending)</option>
+      <option value="price_desc">Sort by Price (Descending)</option>
+    </select>
+    <button class="btn btn-primary" type="submit">Apply Sorting</button>
+  </form>
   <ul>
     {% for ad in ads %}
       <li>
         <strong>{{ ad.year }} {{ ad.brand }} {{ ad.model }}</strong>
         {% if user.is_authenticated %}
-          - Price: ${{ ad.price }}
-          <a href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
+          - Price: ${{ ad.price }}<br>
+          <a class="btn btn-warning" href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
         {% else %}
-          <a href="{% url 'accounts:login' %}">Log in to see details</a>
+          <a class="btn btn-warning" href="{% url 'accounts:login' %}">Log in to see details</a>
         {% endif %}
       </li>
     {% endfor %}
   </ul>
+  <a class="btn btn-warning" href="{% url 'CarCity:filter_ads' %}">Go to Filter Page</a>
 {% endblock %}

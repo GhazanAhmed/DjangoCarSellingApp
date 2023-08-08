@@ -24,6 +24,26 @@ def ad_detail(request, ad_id):
     ad = get_object_or_404(Ad, id=ad_id)
     return render(request, 'CarCity/ad_detail.html', {'ad': ad})
 
+def sort_ads(request):
+    sort_by = request.GET.get('sort_by', None)
+    ads = Ad.objects.all()
+
+    if sort_by == 'year_asc':
+        ads = ads.order_by('year')
+    elif sort_by == 'year_desc':
+        ads = ads.order_by('-year')
+    elif sort_by == 'price_asc':
+        ads = ads.order_by('price')
+    elif sort_by == 'price_desc':
+        ads = ads.order_by('-price')
+    elif sort_by == 'date_asc':
+        ads = ads.order_by('date_published')
+    elif sort_by == 'date_desc':
+        ads = ads.order_by('-date_published')
+
+    return render(request, 'CarCity/sort_ads.html', context={'ads': ads})
+
+
 def filter_ads(request):
     form = FilterForm(request.GET)
     ads = Ad.objects.all()
@@ -46,26 +66,4 @@ def filter_ads(request):
         if price_max:
             ads = ads.filter(price__lte=price_max)
 
-    return render(request, 'CarCity/filter_ads.html', {'ads': ads, 'filter_form': form})
-
-def sort_ads(request):
-    sort_by = request.GET.get('sort_by', None)
-    ads = Ad.objects.all()
-
-    if sort_by == 'year_asc':
-        ads = ads.order_by('year')
-    elif sort_by == 'year_desc':
-        ads = ads.order_by('-year')
-    elif sort_by == 'price_asc':
-        ads = ads.order_by('price')
-    elif sort_by == 'price_desc':
-        ads = ads.order_by('-price')
-    elif sort_by == 'date_asc':
-        ads = ads.order_by('date_published')
-    elif sort_by == 'date_desc':
-        ads = ads.order_by('-date_published')
-
-    return render(request, 'CarCity/sort_ads.html', {'ads': ads})
-
-
-
+    return render(request, 'CarCity/filter_ads.html', context={'ads': ads, 'filter_form': form})

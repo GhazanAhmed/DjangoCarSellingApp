@@ -4,7 +4,7 @@
   <h2>Filter Car Ads</h2>
   <form method="get">
     {{ filter_form.as_p }}
-    <button type="submit">Apply Filter</button>
+    <button class="btn btn-primary" type="submit">Apply Filter</button>
   </form>
   <h3>Filtered Ads:</h3>
   <ul>
@@ -12,12 +12,13 @@
       <li>
         <strong>{{ ad.year }} {{ ad.brand }} {{ ad.model }}</strong>
         {% if user.is_authenticated %}
-          - Price: ${{ ad.price }}
-          <a href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
+          - Price: ${{ ad.price }}<br>
+          <a class="btn btn-warning" href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
         {% else %}
-          <a href="{% url 'accounts:login' %}">Log in to see details</a>
+          <a class="btn btn-warning" href="{% url 'accounts:login' %}">Log in to see details</a>
         {% endif %}
       </li>
     {% endfor %}
   </ul>
+  <a class="btn btn-warning" href="{% url 'CarCity:sort_ads' %}">Go to Sort Page</a>
 {% endblock %}

@@ -2,17 +2,30 @@
 
 {% block content %}
   <h2>Car Ads</h2>
-  <ul>
-    {% for ad in ads %}
-      <li>
-        <strong>{{ ad.year }} {{ ad.brand }} {{ ad.model }}</strong>
-        {% if user.is_authenticated %}
-          - Price: ${{ ad.price }}<br>
-          <a class="btn btn-warning" href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
-        {% else %}
-          <a class="btn btn-primary" href="{% url 'accounts:login' %}">Log in to see details</a>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
+
+  <div class="filters">
+    <h3>Filter Options:</h3>
+    <a class="btn btn-warning" href="{% url 'CarCity:filter_ads' %}">Go to Filter Page</a>
+  </div>
+
+  <div class="sorting">
+    <h3>Sort Options:</h3>
+    <a class="btn btn-warning" href="{% url 'CarCity:sort_ads' %}">Go to Sort Page</a>
+  </div>
+
+  <div class="ad-list">
+    <ul>
+      {% for ad in ads %}
+        <li>
+          <strong>{{ ad.year }} {{ ad.brand }} {{ ad.model }}</strong>
+          {% if user.is_authenticated %}
+            - Price: ${{ ad.price }}<br>
+            <a class="btn btn-warning" href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
+          {% else %}
+            <a class="btn btn-warning" href="{% url 'accounts:login' %}">Log in to see details</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock %}
