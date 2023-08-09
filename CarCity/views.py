@@ -25,6 +25,8 @@ def post_ad(request):
 def ad_detail(request, ad_id):
     ad = get_object_or_404(Ad, id=ad_id)
     return render(request, 'CarCity/ad_detail.html', {'ad': ad})
+  
+            #   SORT ADS
 
 def ad_list(request):
     sort_by = request.GET.get('sort_by', None)
@@ -45,7 +47,9 @@ def ad_list(request):
 
     return render(request, 'CarCity/sort_ads.html', context={'ads': ads})
 
-def ad_list(request):
+            #  FILTER ADS
+                 
+def ad_list(request):      
     ads = Ad.objects.all()
     filter_form = FilterForm(request.GET)
     filtered_ads = ads
