@@ -2,30 +2,64 @@
 
 {% block content %}
   <h2>Car Ads</h2>
+  <form method="get" class="needs-validation" novalidate>
+    <div class="row d-flex align-items-center">
+      <div class="col-md-6 d-flex flex-row justify-content-between">
+        <div class="d-flex flex-column">
+          <label for="brand">Brand:</label>
+          <select class="form-control" id="brand" name="brand">
+            <option value="">Select Brand</option>
+            {% for brand in distinct_brands %}
+              <option value="{{ brand }}">{{ brand }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="d-flex flex-column">
+          <label for="model">Model:</label>
+          <select class="form-control" id="model" name="model">
+            <option value="">Select Model</option>
+            {% for model in distinct_models %}
+              <option value="{{ model }}">{{ model }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="d-flex flex-column">
+          <label for="year">Year:</label>
+          <select class="form-control" id="year" name="year">
+            <option value="">Select Year</option>
+            {% for year in distinct_years %}
+              <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button class="btn btn-primary btn-sm" style="height: 36px; position: relative; top: 32px;">Apply Filter</button>
+      </div>
+    </div>
+  </form>
 
-  <div class="filters">
-    <h3>Filter Options:</h3>
-    <a class="btn btn-warning" href="{% url 'CarCity:filter_ads' %}">Go to Filter Page</a>
-  </div>
 
-  <div class="sorting">
-    <h3>Sort Options:</h3>
-    <a class="btn btn-warning" href="{% url 'CarCity:sort_ads' %}">Go to Sort Page</a>
-  </div>
-
-  <div class="ad-list">
-    <ul>
-      {% for ad in ads %}
-        <li>
-          <strong>{{ ad.year }} {{ ad.brand }} {{ ad.model }}</strong>
-          {% if user.is_authenticated %}
-            - Price: ${{ ad.price }}<br>
-            <a class="btn btn-warning" href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
-          {% else %}
-            <a class="btn btn-warning" href="{% url 'accounts:login' %}">Log in to see details</a>
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ul>
+    {% if filtered_ads %}<br>
+      <div class="ad-list">
+        <div class="card-columns"> 
+          {% for ad in filtered_ads %}
+            <div class="card">
+              <img class="card-img-top" src="{{ ad.pic.url }}" alt="{{ ad.brand }} {{ ad.model }}" width="300" height="300">
+              <div class="card-body">
+                <h6 class="card-title"><strong>Brand: </strong>{{ ad.brand }}<br> <strong>Model: </strong>{{ ad.model }}<br> <strong>Year: </strong>{{ ad.year }}</h6>
+                {% if user.is_authenticated %}
+                  <p class="card-text"><strong>Price:</strong> ${{ ad.price }}</p>
+                  <a class="btn btn-warning" href="{% url 'CarCity:ad_detail' ad.id %}">View Details</a>
+                {% else %}
+                  <a class="btn btn-warning" href="{% url 'accounts:login' %}">Log in to see details</a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% else %}
+      <p>No ads match the selected filter.</p>
+    {% endif %}
   </div>
 {% endblock %}

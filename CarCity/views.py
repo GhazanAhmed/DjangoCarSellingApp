@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Ad
 from .forms import AdForm, FilterForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 def ad_list(request):
     ads = Ad.objects.all()
@@ -10,7 +11,7 @@ def ad_list(request):
 @login_required
 def post_ad(request):
     if request.method == 'POST':
-        form = AdForm(request.POST)
+        form = AdForm(request.POST, request.FILES)
         if form.is_valid():
             ad = form.save(commit=False)
             ad.user = request.user
@@ -20,11 +21,12 @@ def post_ad(request):
         form = AdForm()
     return render(request, 'CarCity/post_ad.html', {'form': form})
 
+
 def ad_detail(request, ad_id):
     ad = get_object_or_404(Ad, id=ad_id)
     return render(request, 'CarCity/ad_detail.html', {'ad': ad})
 
-def sort_ads(request):
+def ad_list(request):
     sort_by = request.GET.get('sort_by', None)
     ads = Ad.objects.all()
 
@@ -43,27 +45,31 @@ def sort_ads(request):
 
     return render(request, 'CarCity/sort_ads.html', context={'ads': ads})
 
-
-def filter_ads(request):
-    form = FilterForm(request.GET)
+def ad_list(request):
     ads = Ad.objects.all()
+    filter_form = FilterForm(request.GET)
+    filtered_ads = ads
 
-    if form.is_valid():
-        brand = form.cleaned_data.get('brand')
-        model = form.cleaned_data.get('model')
-        year = form.cleaned_data.get('year')
-        price_min = form.cleaned_data.get('price_min')
-        price_max = form.cleaned_data.get('price_max')
+    distinct_brands = ads.values_list('brand', flat=True).distinct()
+    distinct_models = ads.values_list('model', flat=True).distinct()
+    distinct_years = ads.values_list('year', flat=True).distinct()
 
-        if brand:
-            ads = ads.filter(brand__icontains=brand)
-        if model:
-            ads = ads.filter(model__icontains=model)
-        if year:
-            ads = ads.filter(year=year)
-        if price_min:
-            ads = ads.filter(price__gte=price_min)
-        if price_max:
-            ads = ads.filter(price__lte=price_max)
+    if filter_form.is_valid():
+        if filter_form.cleaned_data['brand']:
+            filtered_ads = filtered_ads.filter(brand__icontains=filter_form.cleaned_data['brand'])
+        if filter_form.cleaned_data['model']:
+            filtered_ads = filtered_ads.filter(model__icontains=filter_form.cleaned_data['model'])
+        if filter_form.cleaned_data['year']:
+            filtered_ads = filtered_ads.filter(year=filter_form.cleaned_data['year'])
+        if filter_form.cleaned_data['price_min']:
+            filtered_ads = filtered_ads.filter(price__gte=filter_form.cleaned_data['price_min'])
+        if filter_form.cleaned_data['price_max']:
+            filtered_ads = filtered_ads.filter(price__lte=filter_form.cleaned_data['price_max'])
 
-    return render(request, 'CarCity/filter_ads.html', context={'ads': ads, 'filter_form': form})
+    return render(request, 'CarCity/ad_list.html', {
+        'filter_form': filter_form,
+        'filtered_ads': filtered_ads,
+        'distinct_brands': distinct_brands,
+        'distinct_models': distinct_models,
+        'distinct_years': distinct_years,
+    })

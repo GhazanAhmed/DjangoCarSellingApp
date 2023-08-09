@@ -6,9 +6,9 @@
       <h2>Ad Details</h2>
     </div>
     <div class="card-body">
-      <h4 class="card-title">{{ ad.year }} {{ ad.brand }} {{ ad.model }}</h4>
-      <p class="card-text">Price: ${{ ad.price }}</p>
-      <p class="card-text">Contact Information: {% if user.is_authenticated %}{{ ad.contact_info }}{% else %}<a href="{% url 'accounts:login' %}">Log in to see contact information</a>{% endif %}</p>
+      <strong class="card-title">Brand: </strong>{{ ad.brand }}<br><strong>Model: </strong> {{ ad.model }}<br><strong>Year: </strong> {{ ad.year }}<br>
+      <strong class="card-text">Price: </strong>${{ ad.price }}</strong><br>
+      <strong class="card-text">Contact Information: </strong>{% if user.is_authenticated %}{{ ad.contact_info }}{% else %}<br><a href="{% url 'accounts:login' %}"><strong>Log in to see contact information</a>{% endif %}</strong><br><br>
       <a href="{% url 'CarCity:ad_list' %}" class="btn btn-secondary">Back to Ads</a>
     </div>
   </div>
